@@ -3595,6 +3595,9 @@ pub const ByteStream = struct {
                     this.buffer = try std.ArrayList(u8).initCapacity(bun.default_allocator, chunk.len);
                     this.buffer.appendSliceAssumeCapacity(chunk);
                 },
+                .err => {
+                    this.pending.result = .{ .err = stream.err };
+                },
                 else => unreachable,
             }
             return;
@@ -3603,6 +3606,9 @@ pub const ByteStream = struct {
         switch (stream) {
             .temporary_and_done, .temporary => {
                 try this.buffer.appendSlice(chunk);
+            },
+            .err => {
+                this.pending.result = .{ .err = stream.err };
             },
             // We don't support the rest of these yet
             else => unreachable,
