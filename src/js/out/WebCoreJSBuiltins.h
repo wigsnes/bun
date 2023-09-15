@@ -3936,6 +3936,14 @@ extern const JSC::ConstructAbility s_readableStreamCreateEmptyReadableStreamCode
 extern const JSC::ConstructorKind s_readableStreamCreateEmptyReadableStreamCodeConstructorKind;
 extern const JSC::ImplementationVisibility s_readableStreamCreateEmptyReadableStreamCodeImplementationVisibility;
 
+// createUsedReadableStream
+#define WEBCORE_BUILTIN_READABLESTREAM_CREATEUSEDREADABLESTREAM 1
+extern const char* const s_readableStreamCreateUsedReadableStreamCode;
+extern const int s_readableStreamCreateUsedReadableStreamCodeLength;
+extern const JSC::ConstructAbility s_readableStreamCreateUsedReadableStreamCodeConstructAbility;
+extern const JSC::ConstructorKind s_readableStreamCreateUsedReadableStreamCodeConstructorKind;
+extern const JSC::ImplementationVisibility s_readableStreamCreateUsedReadableStreamCodeImplementationVisibility;
+
 // createNativeReadableStream
 #define WEBCORE_BUILTIN_READABLESTREAM_CREATENATIVEREADABLESTREAM 1
 extern const char* const s_readableStreamCreateNativeReadableStreamCode;
@@ -4018,6 +4026,7 @@ extern const JSC::ImplementationVisibility s_readableStreamLazyAsyncIteratorCode
     macro(readableStreamToBlob, readableStreamReadableStreamToBlob, 1) \
     macro(consumeReadableStream, readableStreamConsumeReadableStream, 3) \
     macro(createEmptyReadableStream, readableStreamCreateEmptyReadableStream, 0) \
+    macro(createUsedReadableStream, readableStreamCreateUsedReadableStream, 0) \
     macro(createNativeReadableStream, readableStreamCreateNativeReadableStream, 3) \
     macro(cancel, readableStreamCancel, 1) \
     macro(getReader, readableStreamGetReader, 1) \
@@ -4038,6 +4047,7 @@ extern const JSC::ImplementationVisibility s_readableStreamLazyAsyncIteratorCode
     macro(readableStreamReadableStreamToBlobCode, readableStreamToBlob, ASCIILiteral(), s_readableStreamReadableStreamToBlobCodeLength) \
     macro(readableStreamConsumeReadableStreamCode, consumeReadableStream, ASCIILiteral(), s_readableStreamConsumeReadableStreamCodeLength) \
     macro(readableStreamCreateEmptyReadableStreamCode, createEmptyReadableStream, ASCIILiteral(), s_readableStreamCreateEmptyReadableStreamCodeLength) \
+    macro(readableStreamCreateUsedReadableStreamCode, createUsedReadableStream, ASCIILiteral(), s_readableStreamCreateUsedReadableStreamCodeLength) \
     macro(readableStreamCreateNativeReadableStreamCode, createNativeReadableStream, ASCIILiteral(), s_readableStreamCreateNativeReadableStreamCodeLength) \
     macro(readableStreamCancelCode, cancel, ASCIILiteral(), s_readableStreamCancelCodeLength) \
     macro(readableStreamGetReaderCode, getReader, ASCIILiteral(), s_readableStreamGetReaderCodeLength) \
@@ -4058,6 +4068,7 @@ extern const JSC::ImplementationVisibility s_readableStreamLazyAsyncIteratorCode
     macro(readableStreamToBlob) \
     macro(consumeReadableStream) \
     macro(createEmptyReadableStream) \
+    macro(createUsedReadableStream) \
     macro(createNativeReadableStream) \
     macro(cancel) \
     macro(getReader) \
