@@ -751,10 +751,14 @@ pub const HTTPThread = struct {
             if (socket_async_http_abort_tracker.fetchSwapRemove(http.async_http_id)) |socket_ptr| {
                 if (http.client.isHTTPS()) {
                     const socket = uws.SocketTLS.from(socket_ptr.value);
-                    socket.shutdown();
+                    if(socket.isEstablished() and !socket.isClosed() and !socket.isShutdown()) {
+                        socket.shutdownRead();
+                    }
                 } else {
                     const socket = uws.SocketTCP.from(socket_ptr.value);
-                    socket.shutdown();
+                    if(socket.isEstablished() and !socket.isClosed() and !socket.isShutdown()) {
+                        socket.shutdownRead();
+                    }
                 }
             }
         }
@@ -1068,7 +1072,7 @@ pub fn onClose(
     socket: NewHTTPContext(is_ssl).HTTPSocket,
 ) void {
     log("Closed  {s}\n", .{client.url.href});
-
+    
     const in_progress = client.state.stage != .done and client.state.stage != .fail;
 
     // if the peer closed after a full chunk, treat this
@@ -1092,7 +1096,7 @@ pub fn onClose(
     }
 
     if (in_progress) {
-        client.fail(error.ConnectionClosed);
+        client.closeAndFail(error.ConnectionClosed, is_ssl, socket);
     }
 }
 pub fn onTimeout(
@@ -1121,12 +1125,12 @@ pub fn onConnectError(
 pub fn onEnd(
     client: *HTTPClient,
     comptime is_ssl: bool,
-    _: NewHTTPContext(is_ssl).HTTPSocket,
+    socket: NewHTTPContext(is_ssl).HTTPSocket,
 ) void {
     log("onEnd  {s}\n", .{client.url.href});
 
     if (client.state.stage != .done and client.state.stage != .fail)
-        client.fail(error.ConnectionClosed);
+        client.closeAndFail(error.ConnectionClosed, is_ssl, socket);
 }
 
 pub inline fn getAllocator() std.mem.Allocator {
@@ -1532,6 +1536,9 @@ pub fn isKeepAlivePossible(this: *HTTPClient) bool {
         if (this.http_proxy != null and this.url.isHTTPS()) {
             return false;
         }
+        if (this.signals.get(.aborted)) {
+            return false;
+        }
         return !this.disable_keepalive;
     }
     return false;
@@ -1836,6 +1843,9 @@ pub const AsyncHTTP = struct {
         if (comptime FeatureFlags.enable_keepalive) {
             // is not possible to reuse Proxy with TSL, so disable keepalive if url is tunneling HTTPS
             if (this.http_proxy != null and this.url.isHTTPS()) {
+                return false;
+            }
+            if (this.signals.get(.aborted)) {
                 return false;
             }
             // check state
