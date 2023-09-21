@@ -443,7 +443,7 @@ void us_timer_close(struct us_timer_t *timer, int fallthrough) {
     if(fallthrough){
         us_free(timer);
     }else {
-        us_poll_free((struct us_poll_t *) timer, cb->loop);
+        us_poll_free((struct us_poll_t *) timer, internal_cb->loop);
     }
 }
 
