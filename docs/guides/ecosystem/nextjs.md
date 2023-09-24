@@ -1,5 +1,5 @@
 ---
-name: Build an app with Next.js and Bun
+name: Initialize an app with Next.js using Bun
 ---
 
 {% callout %}
